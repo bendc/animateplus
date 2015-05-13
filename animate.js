@@ -301,7 +301,7 @@ const animate = (() => {
 
   const reverseDirection = params => {
     const map = cloneMap(params);
-    getAnimatedProps(params).forEach(prop => map.get(prop).reverse());
+    getAnimatedProps(params).forEach(prop => map.set(prop, map.get(prop).slice().reverse()));
     return map;
   };
 
