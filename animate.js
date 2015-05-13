@@ -430,27 +430,33 @@ const animate = (() => {
   const getFinalValues = params =>
     prop => recomposeValue(...compose(last, splitDigits)(params.get(prop)).values());
 
-  const setProgress = (el, props, progress) => {
-    var transforms;
-    props.forEach((prop, i) => {
-      if (prop == "opacity") {
-        el.style.opacity = progress[i];
-        return;
-      }
-      if (isTransformFunction(prop)) {
-        if (!transforms) {
-          transforms = new Map();
-          ["functions", "values"].forEach(key => transforms.set(key, []));
+  const setProgress = (() => {
+    var transform;
+    return (el, props, progress) => {
+      var transforms;
+      props.forEach((prop, i) => {
+        if (prop == "opacity") {
+          el.style.opacity = progress[i];
+          return;
         }
-        transforms.get("functions").push(prop);
-        transforms.get("values").push(progress[i]);
+        if (isTransformFunction(prop)) {
+          if (!transforms) {
+            transforms = new Map();
+            ["functions", "values"].forEach(key => transforms.set(key, []));
+          }
+          transforms.get("functions").push(prop);
+          transforms.get("values").push(progress[i]);
+          return;
+        }
+        el.setAttribute(prop, progress[i]);
+      });
+      if (!transforms)
         return;
-      }
-      el.setAttribute(prop, progress[i]);
-    });
-    if (!transforms) return;
-    el.style.transform = combineTransformFunctions(...transforms.values());
-  };
+      if (!transform)
+        transform = "transform" in document.body.style ? "transform" : "-webkit-transform";
+      el.style[transform] = combineTransformFunctions(...transforms.values());
+    };
+  })();
 
 
   // start / end

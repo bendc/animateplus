@@ -1,17 +1,16 @@
-```
-This library only works in Firefox at the moment as its code hasn't been transpiled to ES5 yet.
-```
-
 # Animate Plus
 
-Animate Plus is a performant CSS and SVG animation library.
+Animate Plus is a powerful and lightweight JavaScript library that lets you animate CSS properties
+and SVG attributes. Animate Plus is well-suited for morphing transitions, quick UI interactions and
+longer animation sequences. Check out this [performance/stress
+test](http://playground.deaxon.com/js/animate-plus/particles/) of 500 SVG shapes animated independently.
 
 ## Getting Started
 
-Download and insert `animate.js` (3KB gzipped) :
+Download and insert `animate.min.js` (3.6KB gzipped) :
 
 ```html
-<script src=animate.js></script>
+<script src=animate.min.js></script>
 ```
 Start animating things:
 
@@ -127,7 +126,7 @@ A function to trigger before your animation starts. An array of the elements sel
 <div></div>
 <div></div>
 
-<script src=animate.js></script>
+<script src=animate.min.js></script>
 <script>
   animate({
     el: "div",
@@ -208,4 +207,4 @@ animate({
   points: points
 });
 ```
-[View this example's result →](http://sharedfil.es/LVughQVLXI.html)
+[View this example's result →](http://playground.deaxon.com/js/animate-plus/star/)
