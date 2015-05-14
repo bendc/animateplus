@@ -255,9 +255,7 @@ const animate = (() => {
   defaults.set("easing", "easeOutElastic");
 
   const fillBlankParams = (() => {
-    const required = getKeys(defaults).filter(key => {
-      if (defaults.get(key)) return key;
-    });
+    const required = getKeys(defaults).filter(key => defaults.get(key));
     const isFilled = params => required.every(param => params.has(param));
     const fill = params => {
       const map = cloneMap(params);
