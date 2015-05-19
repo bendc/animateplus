@@ -4,7 +4,7 @@ Animate Plus is a performant JavaScript library that helps you animate CSS prope
 attributes. Animate Plus is well-suited for quick UI interactions as well as longer animation
 sequences on both desktop and mobile. Check out this [simple morphing animation
 demo](http://playground.deaxon.com/js/animate-plus/download-button/) and this [performance/stress
-test](http://playground.deaxon.com/js/animate-plus/particles/) of 500 SVG shapes animated
+test](http://playground.deaxon.com/js/animate-plus/particles/) of 250 SVG shapes animated
 independently.
 
 ## Getting Started
