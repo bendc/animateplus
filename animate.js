@@ -217,7 +217,7 @@ const animate = (() => {
         map.forEach((value, key) => clone.set(key, value));
         return clone;
       };
-    };
+    }
     return map => new Map(map);
   })();
 
@@ -440,7 +440,8 @@ const animate = (() => {
         if (isTransformFunction(prop)) {
           if (!transforms) {
             transforms = new Map();
-            ["functions", "values"].forEach(key => transforms.set(key, []));
+            transforms.set("functions", []);
+            transforms.set("values", []);
           }
           transforms.get("functions").push(prop);
           transforms.get("values").push(progress[i]);
