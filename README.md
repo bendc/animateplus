@@ -3,8 +3,8 @@
 Animate Plus is a performant JavaScript library that helps you animate CSS properties and SVG
 attributes. Animate Plus is well-suited for quick UI interactions as well as longer animation
 sequences on both desktop and mobile. Check out this [simple morphing animation
-demo](http://playground.deaxon.com/js/animate-plus/download-button/) and this [performance/stress
-test](http://playground.deaxon.com/js/animate-plus/particles/) of 250 SVG shapes animated
+demo](http://animateplus.com/demos/download-button/) and this [performance/stress
+test](http://animateplus.com/demos/particles/) of 250 SVG shapes animated
 independently.
 
 ## Getting Started
@@ -64,7 +64,8 @@ The delay before your animation starts in milliseconds. Default: `0`.
 
 ### easing
 
-The easing type. Default: `easeOutElastic`. Possible values:
+The easing type. Default: `easeOutElastic`. You can preview the possible values listed
+below with the [easing visualizer tool](http://animateplus.com/easing-visualizer/).
 
 * linear
 * easeInQuad
@@ -209,4 +210,4 @@ animate({
   points: points
 });
 ```
-[View this example's result →](http://playground.deaxon.com/js/animate-plus/star/)
+[View this example's result →](http://animateplus.com/demos/star/)
