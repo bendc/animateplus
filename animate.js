@@ -6,44 +6,42 @@ const animate = (() => {
   // func utils
   // ===============================================================================================
 
+  const curry = fn => {
+    const arity = fn.length;
+    const curried = (...args) =>
+      args.length < arity ? (...more) => curried(...args, ...more) : fn(...args);
+    return curried;
+  };
+
   const compose = (...funcs) => value => funcs.reduce((a, b) => b(a), value);
 
-  const not = func => (...args) => !func(...args);
+  const not = fn => (...args) => !fn(...args);
 
   const easing = {
-
     linear(t, b, c, d) {
       return b + (t / d * c);
     },
-
     easeInQuad(t, b, c, d) {
       return c*(t/=d)*t + b;
     },
-
     easeInCubic(t, b, c, d) {
       return c*(t/=d)*t*t + b;
     },
-
     easeInQuart(t, b, c, d) {
       return c*(t/=d)*t*t*t + b;
     },
-
     easeInQuint(t, b, c, d) {
       return c*(t/=d)*t*t*t*t + b;
     },
-
     easeInSine(t, b, c, d) {
       return -c * Math.cos(t/d * (Math.PI/2)) + c + b;
     },
-
     easeInExpo(t, b, c, d) {
       return t==0 ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
     },
-
     easeInCirc(t, b, c, d) {
       return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
     },
-
     easeInElastic(t, b, c, d) {
       var s=1.70158;var p=0;var a=c;
       if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3;
@@ -51,40 +49,31 @@ const animate = (() => {
       else var s = p/(2*Math.PI) * Math.asin (c/a);
       return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
     },
-
     easeInBack(t, b, c, d, s) {
       if (s == undefined) s = 1.70158;
       return c*(t/=d)*t*((s+1)*t - s) + b;
     },
-
     easeOutQuad(t, b, c, d) {
       return -c *(t/=d)*(t-2) + b;
     },
-
     easeOutCubic(t, b, c, d) {
       return c*((t=t/d-1)*t*t + 1) + b;
     },
-
     easeOutQuart(t, b, c, d) {
       return -c * ((t=t/d-1)*t*t*t - 1) + b;
     },
-
     easeOutQuint(t, b, c, d) {
       return c*((t=t/d-1)*t*t*t*t + 1) + b;
     },
-
     easeOutSine(t, b, c, d) {
       return c * Math.sin(t/d * (Math.PI/2)) + b;
     },
-
     easeOutExpo(t, b, c, d) {
       return t==d ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
     },
-
     easeOutCirc(t, b, c, d) {
       return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
     },
-
     easeOutElastic(t, b, c, d) {
       var s=1.70158;var p=0;var a=c;
       if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3;
@@ -92,12 +81,10 @@ const animate = (() => {
       else var s = p/(2*Math.PI) * Math.asin (c/a);
       return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
     },
-
     easeOutBack(t, b, c, d, s) {
       if (s == undefined) s = 1.70158;
       return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
     },
-
     easeOutBounce(t, b, c, d) {
       if ((t/=d) < (1/2.75)) {
         return c*(7.5625*t*t) + b;
@@ -109,43 +96,35 @@ const animate = (() => {
         return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
       }
     },
-
     easeInOutQuad(t, b, c, d) {
       if ((t/=d/2) < 1) return c/2*t*t + b;
       return -c/2 * ((--t)*(t-2) - 1) + b;
     },
-
     easeInOutCubic(t, b, c, d) {
       if ((t/=d/2) < 1) return c/2*t*t*t + b;
       return c/2*((t-=2)*t*t + 2) + b;
     },
-
     easeInOutQuart(t, b, c, d) {
       if ((t/=d/2) < 1) return c/2*t*t*t*t + b;
       return -c/2 * ((t-=2)*t*t*t - 2) + b;
     },
-
     easeInOutQuint(t, b, c, d) {
       if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
       return c/2*((t-=2)*t*t*t*t + 2) + b;
     },
-
     easeInOutSine(t, b, c, d) {
       return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
     },
-
     easeInOutExpo(t, b, c, d) {
       if (t==0) return b;
       if (t==d) return b+c;
       if ((t/=d/2) < 1) return c/2 * Math.pow(2, 10 * (t - 1)) + b;
       return c/2 * (-Math.pow(2, -10 * --t) + 2) + b;
     },
-
     easeInOutCirc(t, b, c, d) {
       if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
       return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
     },
-
     easeInOutElastic(t, b, c, d) {
       var s=1.70158;var p=0;var a=c;
       if (t==0) return b; if ((t/=d/2)==2) return b+c; if (!p) p=d*(.3*1.5);
@@ -154,13 +133,11 @@ const animate = (() => {
       if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
       return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
     },
-
     easeInOutBack(t, b, c, d, s) {
       if (s == undefined) s = 1.70158;
       if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
       return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
     }
-
   };
 
 
@@ -175,8 +152,8 @@ const animate = (() => {
 
   const contains = (() =>
     Array.prototype.includes
-      ? (arr, value) => arr.includes(value)
-      : (arr, value) => arr.some(el => el === value)
+    ? (arr, value) => arr.includes(value)
+    : (arr, value) => arr.some(el => el === value)
   )();
 
   const difference = (arr, ...others) => {
@@ -268,7 +245,7 @@ const animate = (() => {
   })();
 
   const buildMissingArrays = (() => {
-    const propIsArray = params => prop => Array.isArray(params.get(prop));
+    const propIsArray = curry((params, prop) => Array.isArray(params.get(prop)));
     const isValid = params => getCSSprops(params).every(propIsArray(params));
     const missingArrays = params => getCSSprops(params).filter(not(propIsArray(params)));
     return params => {
@@ -280,7 +257,7 @@ const animate = (() => {
   })();
 
   const ensureRGB = (() => {
-    const hasHex = params => prop => params.get(prop).some(isHex);
+    const hasHex = curry((params, prop) => params.get(prop).some(isHex));
     const isValid = params => !getSVGprops(params).some(hasHex(params));
     const needConvert = params => getSVGprops(params).filter(hasHex(params));
     return params => {
@@ -333,7 +310,7 @@ const animate = (() => {
   // ===============================================================================================
 
   const supportedCSSprops = ["opacity", "skewX", "skewY", "perspective"].concat(
-    ...["translate", "scale", "rotate"].map(func => ["X", "Y", "Z"].map(axis => func + axis))
+    ...["translate", "scale", "rotate"].map(fn => ["X", "Y", "Z"].map(axis => fn + axis))
   );
 
   const defaultCSSvalues = new Map();
@@ -410,23 +387,22 @@ const animate = (() => {
 
   const getProgress = (() => {
     const colorCheck = compose(first, isRGB);
-    return (params, elapsed) =>
-      prop => {
-        const [from, to] = params.get(prop).map(splitDigits);
-        const isColor = colorCheck(params.get(prop));
-        const progress = to.get("digits").map((digit, i) => {
-          const start = from.get("digits")[i];
-          if (start == digit) return start;
-          const end = digit - start;
-          const result = easing[params.get("easing")](elapsed, start, end, params.get("duration"));
-          return isColor ? Math.round(result) : result;
-        });
-        return recomposeValue(progress, to.get("others"));
-      };
+    return curry((params, elapsed, prop) => {
+      const [from, to] = params.get(prop).map(splitDigits);
+      const isColor = colorCheck(params.get(prop));
+      const progress = to.get("digits").map((digit, i) => {
+        const start = from.get("digits")[i];
+        if (start == digit) return start;
+        const end = digit - start;
+        const result = easing[params.get("easing")](elapsed, start, end, params.get("duration"));
+        return isColor ? Math.round(result) : result;
+      });
+      return recomposeValue(progress, to.get("others"));
+    });
   })();
 
-  const getFinalValues = params =>
-    prop => recomposeValue(...compose(last, splitDigits)(params.get(prop)).values());
+  const getFinalValues = curry((params, prop) =>
+    recomposeValue(...compose(last, splitDigits)(params.get(prop)).values()));
 
   const setProgress = (() => {
     var transform;
@@ -468,8 +444,8 @@ const animate = (() => {
     };
     return (callback, params) =>
       params.get("delay")
-        ? setTimeout(() => start(callback, params), params.get("delay"))
-        : start(callback, params);
+      ? setTimeout(() => start(callback, params), params.get("delay"))
+      : start(callback, params);
   })();
 
   const complete = params => {
@@ -502,7 +478,8 @@ const animate = (() => {
       if (!time.has("start")) time.set("start", now);
       time.set("elapsed", now - time.get("start"));
       const running = time.get("elapsed") < validatedParams.get("duration");
-      const progress = animatedProps.map(running
+      const progress = animatedProps.map(
+        running
         ? getProgress(validatedParams, time.get("elapsed"))
         : getFinalValues(validatedParams)
       );
