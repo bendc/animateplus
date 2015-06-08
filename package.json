@@ -1,0 +1,24 @@
+{
+  "name": "animateplus",
+  "version": "1.0.0",
+  "description": "CSS and SVG animation library",
+  "main": "animate.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bendc/animateplus.git"
+  },
+  "keywords": [
+    "animate",
+    "animation",
+    "css",
+    "svg",
+    "javascript"
+  ],
+  "author": "Benjamin De Cock <ben@deaxon.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bendc/animateplus/issues"
+  },
+  "homepage": "https://github.com/bendc/animateplus",
+  "files": ["LICENSE.md", "animate.js", "animate.min.js"]
+}
