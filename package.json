@@ -1,6 +1,6 @@
 {
   "name": "animateplus",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CSS and SVG animation library",
   "main": "animate.min.js",
   "repository": {

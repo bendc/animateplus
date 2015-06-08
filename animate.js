@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Animation Library v1.0.0
+ * Animate Plus JavaScript Animation Library v1.1.0
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
