@@ -1,3 +1,12 @@
+/*
+ * Animate Plus JavaScript Animation Library v1.0.0
+ * http://animateplus.com
+ *
+ * Copyright (c) 2015 Benjamin De Cock
+ * Released under the MIT license
+ * http://animateplus.com/license
+ */
+
 const animate = (() => {
 
   "use strict";
@@ -199,6 +208,25 @@ const animate = (() => {
   })();
 
 
+  // colors
+  // ===============================================================================================
+
+  const isHex = val => /^#/.test(val);
+  const isRGB = val => /^rgb/.test(val);
+
+  const toRGB = (() => {
+    const expand = hex =>
+      hex.length < 7 ? hex.split("").reduce((a, b) => a + b + b) : hex;
+    const convert = hex =>
+      hex.match(/[\d\w]{2}/g).map(val => parseInt(val, 16));
+    return hex => {
+      if (isRGB(hex)) return hex;
+      const [r, g, b] = compose(expand, convert)(hex);
+      return `rgb(${r}, ${g}, ${b})`;
+    };
+  })();
+
+
   // dom
   // ===============================================================================================
 
@@ -297,6 +325,21 @@ const animate = (() => {
     return params => getKeys(params).filter(isProp);
   })();
 
+  const getAnimatedPropsMaps = (() => {
+    const isColor = compose(first, isRGB);
+    const createPropMap = curry((params, prop) => {
+      const values = params.get(prop).map(splitDigits);
+      const map = new Map();
+      map.set("prop", prop);
+      map.set("from", first(values));
+      map.set("to", last(values));
+      map.set("isTransformFunction", isTransformFunction(prop));
+      map.set("isColor", map.get("isTransformFunction") ? false : isColor(params.get(prop)));
+      return map;
+    });
+    return (params, animatedProps) => getAnimatedProps(params).map(createPropMap(params));
+  })();
+
   const getCSSprops = (() => {
     const isCSSprop = prop => contains(supportedCSSprops, prop);
     return params => getKeys(params).filter(isCSSprop);
@@ -363,74 +406,51 @@ const animate = (() => {
   })();
 
 
-  // color
-  // ===============================================================================================
-
-  const isHex = val => /^#/.test(val);
-  const isRGB = val => /^rgb/.test(val);
-
-  const toRGB = (() => {
-    const expand = hex =>
-      hex.length < 7 ? hex.split("").reduce((a, b) => a + b + b) : hex;
-    const convert = hex =>
-      hex.match(/[\d\w]{2}/g).map(val => parseInt(val, 16));
-    return hex => {
-      if (isRGB(hex)) return hex;
-      const [r, g, b] = compose(expand, convert)(hex);
-      return `rgb(${r}, ${g}, ${b})`;
-    };
-  })();
-
-
   // progress
   // ===============================================================================================
 
-  const getProgress = (() => {
-    const colorCheck = compose(first, isRGB);
-    return curry((params, elapsed, prop) => {
-      const [from, to] = params.get(prop).map(splitDigits);
-      const isColor = colorCheck(params.get(prop));
-      const progress = to.get("digits").map((digit, i) => {
-        const start = from.get("digits")[i];
-        if (start == digit) return start;
-        const end = digit - start;
-        const result = easing[params.get("easing")](elapsed, start, end, params.get("duration"));
-        return isColor ? Math.round(result) : result;
-      });
-      return recomposeValue(progress, to.get("others"));
+  const getProgress = curry((params, elapsed, prop) => {
+    const progress = prop.get("to").get("digits").map((digit, i) => {
+      const start = prop.get("from").get("digits")[i];
+      if (start == digit) return start;
+      const end = digit - start;
+      const result = easing[params.get("easing")](elapsed, start, end, params.get("duration"));
+      return prop.get("isColor") ? Math.round(result) : result;
     });
-  })();
+    return recomposeValue(progress, prop.get("to").get("others"));
+  });
 
-  const getFinalValues = curry((params, prop) =>
-    recomposeValue(...compose(last, splitDigits)(params.get(prop)).values()));
+  const getFinalValues = curry((params, prop) => last(params.get(prop.get("prop"))));
 
   const setProgress = (() => {
     var transform;
-    return (el, props, progress) => {
+    return curry((props, progress, el) => {
       var transforms;
       props.forEach((prop, i) => {
-        if (prop == "opacity") {
-          el.style.opacity = progress[i];
-          return;
-        }
-        if (isTransformFunction(prop)) {
+        if (prop.get("isTransformFunction")) {
           if (!transforms) {
             transforms = new Map();
             transforms.set("functions", []);
             transforms.set("values", []);
           }
-          transforms.get("functions").push(prop);
+          transforms.get("functions").push(prop.get("prop"));
           transforms.get("values").push(progress[i]);
           return;
         }
-        el.setAttribute(prop, progress[i]);
+        if (prop.get("prop") == "opacity") {
+          el.style.opacity = progress[i];
+          return;
+        }
+        el.setAttribute(prop.get("prop"), progress[i]);
       });
       if (!transforms)
         return;
       if (!transform)
         transform = "transform" in document.body.style ? "transform" : "-webkit-transform";
-      el.style[transform] = combineTransformFunctions(...transforms.values());
-    };
+      el.style[transform] = combineTransformFunctions(
+        transforms.get("functions"), transforms.get("values")
+      );
+    });
   })();
 
 
@@ -471,7 +491,7 @@ const animate = (() => {
 
   return params => {
     const validatedParams = validateParams(params);
-    const animatedProps = getAnimatedProps(validatedParams);
+    const animatedProps = getAnimatedPropsMaps(validatedParams);
     const time = new Map();
 
     const step = now => {
@@ -483,7 +503,7 @@ const animate = (() => {
         ? getProgress(validatedParams, time.get("elapsed"))
         : getFinalValues(validatedParams)
       );
-      validatedParams.get("el").forEach(el => setProgress(el, animatedProps, progress));
+      validatedParams.get("el").forEach(setProgress(animatedProps, progress));
       running ? requestAnimationFrame(step) : complete(validatedParams);
     };
 

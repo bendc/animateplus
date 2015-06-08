@@ -1,6 +1,8 @@
 # Animate Plus
 
-Animate Plus is a performant JavaScript library that helps you animate CSS properties and SVG attributes. Animate Plus is well-suited for quick UI interactions as well as longer animation sequences on both desktop and mobile. Check out these quick examples:
+Animate Plus is a performant JavaScript library that helps you animate CSS properties and SVG
+attributes. Animate Plus is well-suited for quick UI interactions as well as longer animation
+sequences on both desktop and mobile. Check out these simple examples:
 
 * [CSS spring animations on DOM elements](http://animateplus.com/demos/circle/)
 * [Simple SVG morphing animation](http://animateplus.com/demos/download-button/)
@@ -8,7 +10,7 @@ Animate Plus is a performant JavaScript library that helps you animate CSS prope
 
 ## Getting Started
 
-Download and insert `animate.min.js` (3.6KB gzipped) :
+Download and insert `animate.min.js` (2.7KB gzipped) :
 
 ```html
 <script src=animate.min.js></script>
