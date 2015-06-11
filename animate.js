@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Animation Library v1.1.0
+ * Animate Plus JavaScript Animation Library v1.1.1
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -195,7 +195,7 @@ const animate = (() => {
 
   const cloneMap = (() => {
     try {
-      new Map(new Map());
+      if (!new Map(new Map().set(null, null)).size) throw new Error();
     }
     catch (e) {
       return map => {

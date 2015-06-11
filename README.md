@@ -10,7 +10,7 @@ sequences on both desktop and mobile. Check out these simple examples:
 
 ## Getting Started
 
-`npm install animateplus` or download and insert `animate.min.js` (2.7KB gzipped) :
+`npm install animateplus` or download and insert `animate.min.js` (2.8KB gzipped) :
 
 ```html
 <script src=animate.min.js></script>
