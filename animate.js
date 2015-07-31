@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Animation Library v1.1.1
+ * Animate Plus JavaScript Library v1.2.0
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -423,9 +423,9 @@ const animate = (() => {
   const getFinalValues = curry((params, prop) => last(params.get(prop.get("prop"))));
 
   const setProgress = (() => {
-    var transform;
+    let transform;
     return curry((props, progress, el) => {
-      var transforms;
+      let transforms;
       props.forEach((prop, i) => {
         if (prop.get("isTransformFunction")) {
           if (!transforms) {
@@ -468,10 +468,11 @@ const animate = (() => {
       : start(callback, params);
   })();
 
-  const complete = params => {
+  const complete = (id, params) => {
+    untrack(id);
     if (params.get("complete")) params.get("complete")(params.get("el"));
     if (params.get("loop")) loop(params);
-  }
+  };
 
   const loop = params =>
     animate((() => {
@@ -486,31 +487,69 @@ const animate = (() => {
     })());
 
 
+  // animation tracking
+  // ===============================================================================================
+
+  let animations = new Map();
+
+  const track = (() => {
+    let count = 0;
+    return elements => {
+      const id = count++;
+      const map = cloneMap(animations);
+      map.set(id, elements);
+      animations = map;
+      return id;
+    };
+  })();
+
+  const untrack = id => {
+    const map = cloneMap(animations);
+    map.delete(id);
+    animations = map;
+  };
+
+
   // public
   // ===============================================================================================
 
-  return params => {
+  const animate = params => {
     const validatedParams = validateParams(params);
     const animatedProps = getAnimatedPropsMaps(validatedParams);
+    const id = track(validatedParams.get("el"));
     const time = new Map();
 
     const step = now => {
+      if (!animations.has(id)) return;
       if (!time.has("start")) time.set("start", now);
       time.set("elapsed", now - time.get("start"));
+
       const running = time.get("elapsed") < validatedParams.get("duration");
       const progress = animatedProps.map(
         running
         ? getProgress(validatedParams, time.get("elapsed"))
-        : getFinalValues(validatedParams)
-      );
-      validatedParams.get("el").forEach(setProgress(animatedProps, progress));
-      running ? requestAnimationFrame(step) : complete(validatedParams);
+        : getFinalValues(validatedParams));
+
+      animations.get(id).forEach(setProgress(animatedProps, progress));
+      running ? requestAnimationFrame(step) : complete(id, validatedParams);
     };
 
     begin(step, validatedParams);
   };
 
+  animate.stop = el => {
+    const stopped = getElements(el);
+    const map = cloneMap(animations);
+    map.forEach((elements, id) => {
+      const remaining = difference(elements, stopped);
+      remaining.length ? map.set(id, remaining) : map.delete(id);
+    });
+    animations = map;
+  };
+
+  return animate;
 })();
+
 
 if (typeof module != "undefined" && module.exports) {
   module.exports = animate;

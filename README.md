@@ -1,8 +1,8 @@
 # Animate Plus
 
-Animate Plus is a performant JavaScript library that helps you animate CSS properties and SVG
-attributes. Animate Plus is well-suited for quick UI interactions as well as longer animation
-sequences on both desktop and mobile. Check out these simple examples:
+Animate Plus is a performant and lightweight JavaScript library that helps you animate CSS
+properties and SVG attributes. Animate Plus is well-suited for quick UI interactions as well as
+longer animation sequences on both desktop and mobile. Check out these simple examples:
 
 * [CSS spring animations on DOM elements](http://animateplus.com/demos/circle/)
 * [Simple SVG morphing animation](http://animateplus.com/demos/download-button/)
@@ -10,7 +10,7 @@ sequences on both desktop and mobile. Check out these simple examples:
 
 ## Getting Started
 
-`npm install animateplus` or download and insert `animate.min.js` (2.8KB gzipped) :
+`npm install animateplus` or download and insert `animate.min.js` (2.9KB gzipped) :
 
 ```html
 <script src=animate.min.js></script>
@@ -212,3 +212,21 @@ animate({
 });
 ```
 [View this example's result →](http://animateplus.com/demos/star/)
+
+## Stopping animations
+
+`animate.stop(el)` stops all animations running on `el` (which can be any of [these values](#el)).
+
+```javascript
+var div = document.querySelector("div");
+
+animate({
+  el: div,
+  rotateZ: 180
+});
+
+// Stop the rotation on click
+div.addEventListener("click", function() {
+  animate.stop(div);
+});
+```
