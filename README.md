@@ -2,11 +2,10 @@
 
 Animate Plus is a performant and lightweight JavaScript library that helps you animate CSS
 properties and SVG attributes. Animate Plus is well-suited for quick UI interactions as well as
-longer animation sequences on both desktop and mobile. Check out these simple examples:
+longer animation sequences on both desktop and mobile. Check out these examples:
 
-* [CSS spring animations on DOM elements](http://animateplus.com/demos/circle/)
-* [Simple SVG morphing animation](http://animateplus.com/demos/download-button/)
-* [Performance/stress test](http://animateplus.com/demos/particles/) (250 SVG shapes animated independently)
+* [Performance/stress test](http://animateplus.com/demos/stress-test/): 1,000 SVG shapes animated independently at the same time.
+* [Real-world example](https://stripe.com/open-source): all the CSS and SVG animations on the page are made with Animate Plus.
 
 ## Getting Started
 
@@ -196,7 +195,8 @@ animate({
 
 ## SVG animations
 
-SVG animations require an array with your start and end values. Any SVG attribute accepting numerical values can be animated:
+SVG animations require an array with your start and end values. Any SVG attribute containing at
+least some numeric values (such as `d`) can be animated:
 
 ```javascript
 var colors = ["#0bf", "#fc0"];
@@ -230,3 +230,12 @@ div.addEventListener("click", function() {
   animate.stop(div);
 });
 ```
+
+## Quick examples
+
+* [Line-drawing animation screencast](https://cloudup.com/cNfHp2Pbeyk)
+* [SVG morphing button 1](http://animateplus.com/demos/search/)
+* [SVG morphing button 2](http://animateplus.com/demos/download-button/)
+* [250 SVG circles](http://animateplus.com/demos/particles/) (mouseover the elements)
+* [Bouncing circle of DOM elements](http://animateplus.com/demos/circle/) (mouseover the elements)
+* [Bendy paths](http://animateplus.com/demos/bendy-path/) based on the `<use>` SVG element.
