@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Library v1.2.0
+ * Animate Plus JavaScript Library v1.3.0
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -51,15 +51,16 @@ const animate = (() => {
     easeInCirc(t, b, c, d) {
       return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
     },
-    easeInElastic(t, b, c, d) {
-      var s=1.70158;var p=0;var a=c;
-      if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3;
-      if (a < Math.abs(c)) { a=c; var s=p/4; }
-      else var s = p/(2*Math.PI) * Math.asin (c/a);
-      return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+    easeInElastic(t, b, c, d, frequency = 500) {
+      if (t == 0) return b;
+      if ((t /= d) == 1) return b + c;
+      const a = c;
+      const p = d * (1 - Math.min(frequency, 999) / 1000);
+      const s = a < Math.abs(c) ? p / 4 : p / (2 * Math.PI) * Math.asin(c / a);
+      return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
     },
-    easeInBack(t, b, c, d, s) {
-      if (s == undefined) s = 1.70158;
+    easeInBack(t, b, c, d) {
+      const s = 1.70158;
       return c*(t/=d)*t*((s+1)*t - s) + b;
     },
     easeOutQuad(t, b, c, d) {
@@ -83,27 +84,26 @@ const animate = (() => {
     easeOutCirc(t, b, c, d) {
       return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
     },
-    easeOutElastic(t, b, c, d) {
-      var s=1.70158;var p=0;var a=c;
-      if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3;
-      if (a < Math.abs(c)) { a=c; var s=p/4; }
-      else var s = p/(2*Math.PI) * Math.asin (c/a);
-      return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
+    easeOutElastic(t, b, c, d, frequency = 500) {
+      if (t == 0) return b;
+      if ((t /= d) == 1) return b + c;
+      const a = c;
+      const p = d * (1 - Math.min(frequency, 999) / 1000);
+      const s = a < Math.abs(c) ? p / 4 : p / (2 * Math.PI) * Math.asin(c / a);
+      return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
     },
-    easeOutBack(t, b, c, d, s) {
-      if (s == undefined) s = 1.70158;
+    easeOutBack(t, b, c, d) {
+      const s = 1.70158;
       return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
     },
     easeOutBounce(t, b, c, d) {
-      if ((t/=d) < (1/2.75)) {
+      if ((t/=d) < (1/2.75))
         return c*(7.5625*t*t) + b;
-      } else if (t < (2/2.75)) {
+      if (t < (2/2.75))
         return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
-      } else if (t < (2.5/2.75)) {
+      if (t < (2.5/2.75))
         return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
-      } else {
-        return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
-      }
+      return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
     },
     easeInOutQuad(t, b, c, d) {
       if ((t/=d/2) < 1) return c/2*t*t + b;
@@ -134,16 +134,18 @@ const animate = (() => {
       if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
       return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
     },
-    easeInOutElastic(t, b, c, d) {
-      var s=1.70158;var p=0;var a=c;
-      if (t==0) return b; if ((t/=d/2)==2) return b+c; if (!p) p=d*(.3*1.5);
-      if (a < Math.abs(c)) { a=c; var s=p/4; }
-      else var s = p/(2*Math.PI) * Math.asin (c/a);
-      if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
-      return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
+    easeInOutElastic(t, b, c, d, frequency = 500) {
+      if (t == 0) return b;
+      if ((t /= d/2) == 2) return b + c;
+      const a = c;
+      const p = d * (1 - Math.min(frequency, 999) / 1000) * 1.5;
+      const s = a < Math.abs(c) ? p / 4 : p / (2 * Math.PI) * Math.asin(c / a);
+      return t < 1
+      ? -.5 * (a * Math.pow(2, 10 * (t-=1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b
+      : a * Math.pow(2, -10 * (t-=1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
     },
-    easeInOutBack(t, b, c, d, s) {
-      if (s == undefined) s = 1.70158;
+    easeInOutBack(t, b, c, d) {
+      let s = 1.70158;
       if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
       return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
     }
@@ -328,13 +330,20 @@ const animate = (() => {
   const getAnimatedPropsMaps = (() => {
     const isColor = compose(first, isRGB);
     const createPropMap = curry((params, prop) => {
-      const values = params.get(prop).map(splitDigits);
+      const [from, to] = params.get(prop).map(splitDigits);
       const map = new Map();
       map.set("prop", prop);
-      map.set("from", first(values));
-      map.set("to", last(values));
+      map.set("from", from);
+      map.set("to", to);
       map.set("isTransformFunction", isTransformFunction(prop));
       map.set("isColor", map.get("isTransformFunction") ? false : isColor(params.get(prop)));
+      if (/\d$/.test(params.get("easing"))) {
+        const [easing, frequency] = params.get("easing").split(" ");
+        map.set("easing", easing);
+        map.set("frequency", frequency);
+      }
+      else
+        map.set("easing", params.get("easing"));
       return map;
     });
     return (params, animatedProps) => getAnimatedProps(params).map(createPropMap(params));
@@ -353,13 +362,24 @@ const animate = (() => {
   // ===============================================================================================
 
   const supportedCSSprops = ["opacity", "skewX", "skewY", "perspective"].concat(
-    ...["translate", "scale", "rotate"].map(fn => ["X", "Y", "Z"].map(axis => fn + axis))
-  );
+    ...["translate", "scale", "rotate"].map(fn => ["X", "Y", "Z"].map(axis => fn + axis)));
 
   const defaultCSSvalues = new Map();
   supportedCSSprops.forEach(prop =>
-    defaultCSSvalues.set(prop, contains(["opacity", "scaleX", "scaleY"], prop) ? 1 : 0)
-  );
+    defaultCSSvalues.set(prop, contains(["opacity", "scaleX", "scaleY"], prop) ? 1 : 0));
+
+  const hardwareAccelerate = params => {
+    const css = getCSSprops(params);
+    if (!css.length) return;
+    const willChange = [];
+    if (css.some(isTransformFunction)) willChange.push("transform");
+    if (contains(css, "opacity")) willChange.push("opacity");
+    const value = willChange.join();
+    params.get("el").forEach(el => {
+      if (el.style.willChange) return;
+      el.style.willChange = value;
+    });
+  };
 
 
   // transforms
@@ -414,7 +434,9 @@ const animate = (() => {
       const start = prop.get("from").get("digits")[i];
       if (start == digit) return start;
       const end = digit - start;
-      const result = easing[params.get("easing")](elapsed, start, end, params.get("duration"));
+      const result = easing[prop.get("easing")](
+        elapsed, start, end, params.get("duration"), prop.get("frequency")
+      );
       return prop.get("isColor") ? Math.round(result) : result;
     });
     return recomposeValue(progress, prop.get("to").get("others"));
@@ -534,6 +556,7 @@ const animate = (() => {
       running ? requestAnimationFrame(step) : complete(id, validatedParams);
     };
 
+    hardwareAccelerate(validatedParams);
     begin(step, validatedParams);
   };
 
@@ -551,6 +574,5 @@ const animate = (() => {
 })();
 
 
-if (typeof module != "undefined" && module.exports) {
+if (typeof module != "undefined" && module.exports)
   module.exports = animate;
-}

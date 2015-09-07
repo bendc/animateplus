@@ -4,12 +4,13 @@ Animate Plus is a performant and lightweight JavaScript library that helps you a
 properties and SVG attributes. Animate Plus is well-suited for quick UI interactions as well as
 longer animation sequences on both desktop and mobile. Check out these examples:
 
-* [Performance/stress test](http://animateplus.com/demos/stress-test/): 1,000 SVG shapes animated independently at the same time.
-* [Real-world example](https://stripe.com/open-source): all the CSS and SVG animations on the page are made with Animate Plus.
+* [SVG performance/stress test](http://animateplus.com/demos/stress-test/): 1,000 SVG shapes animated independently at the same time.
+* [CSS performance/stress test](http://animateplus.com/demos/bloom/): hold the mouse down and make DOM elements bloom!
+* [Real-world example](https://stripe.com/open-source): all the CSS and SVG animations on this page are made with Animate Plus.
 
 ## Getting Started
 
-`npm install animateplus` or download and insert `animate.min.js` (2.9KB gzipped) :
+`npm install animateplus` or download and insert `animate.min.js` (3KB gzipped) :
 
 ```html
 <script src=animate.min.js></script>
@@ -67,35 +68,28 @@ The delay before your animation starts in milliseconds. Default: `0`.
 The easing type. Default: `easeOutElastic`. You can preview the possible values listed
 below with the [easing visualizer tool](http://animateplus.com/easing-visualizer/).
 
-* linear
-* easeInQuad
-* easeInCubic
-* easeInQuart
-* easeInQuint
-* easeInSine
-* easeInExpo
-* easeInCirc
-* easeInElastic
-* easeInBack
-* easeOutQuad
-* easeOutCubic
-* easeOutQuart
-* easeOutQuint
-* easeOutSine
-* easeOutExpo
-* easeOutCirc
-* easeOutElastic
-* easeOutBack
-* easeOutBounce
-* easeInOutQuad
-* easeInOutCubic
-* easeInOutQuart
-* easeInOutQuint
-* easeInOutSine
-* easeInOutExpo
-* easeInOutCirc
-* easeInOutElastic
-* easeInOutBack
+| linear | ease in       | ease out       | ease in out
+| ------ | ------------- | -------------- | ----------------
+| linear | easeInQuad    | easeOutQuad    | easeInOutQuad
+|        | easeInCubic   | easeOutCubic   | easeInOutCubic
+|        | easeInQuart   | easeOutQuart   | easeInOutQuart
+|        | easeInQuint   | easeOutQuint   | easeInOutQuint
+|        | easeInSine    | easeOutSine    | easeInOutSine
+|        | easeInExpo    | easeOutExpo    | easeInOutExpo
+|        | easeInCirc    | easeOutCirc    | easeInOutCirc
+|        | easeInElastic | easeOutElastic | easeInOutElastic
+|        | easeInBack    | easeOutBack    | easeInOutBack
+|        |               | easeOutBounce  |
+
+The frequency of elastic curves can be configured by passing a number between 0 and 1000 (default: `500`).
+
+```javascript
+animate({
+  el: "div",
+  translateY: "200%",
+  easing: "easeOutElastic 700"
+});
+```
 
 ### loop
 
