@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Library v1.3.0
+ * Animate Plus JavaScript Library v1.3.1
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -361,12 +361,27 @@ const animate = (() => {
   // CSS props
   // ===============================================================================================
 
-  const supportedCSSprops = ["opacity", "skewX", "skewY", "perspective"].concat(
-    ...["translate", "scale", "rotate"].map(fn => ["X", "Y", "Z"].map(axis => fn + axis)));
+  const supportedCSSprops = [
+    "opacity",
+    "translateX",
+    "translateY",
+    "scale",
+    "rotate",
+    "scaleX",
+    "scaleY",
+    "rotateX",
+    "rotateY",
+    "perspective",
+    "skewX",
+    "skewY",
+    "translateZ",
+    "rotateZ",
+    "scaleZ"
+  ];
 
   const defaultCSSvalues = new Map();
   supportedCSSprops.forEach(prop =>
-    defaultCSSvalues.set(prop, contains(["opacity", "scaleX", "scaleY"], prop) ? 1 : 0));
+    defaultCSSvalues.set(prop, contains(["opacity", "scale", "scaleX", "scaleY"], prop) ? 1 : 0));
 
   const hardwareAccelerate = params => {
     const css = getCSSprops(params);

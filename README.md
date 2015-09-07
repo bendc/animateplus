@@ -145,18 +145,11 @@ Same as `begin`, but triggers the callback at the end of the animation instead.
 
 Supported properties:
 
+* translateX - translateY - translateZ
+* scale - scaleX - scaleY - scaleZ
+* rotate - rotateX - rotateY - rotateZ
+* skewX - skewY
 * opacity
-* translateX
-* translateY
-* translateZ
-* scaleX
-* scaleY
-* scaleZ
-* rotateX
-* rotateY
-* rotateZ
-* skewX
-* skewY
 * perspective
 
 Animations start from default CSS values and end to the values you specify:
