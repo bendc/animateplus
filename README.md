@@ -186,16 +186,17 @@ SVG animations require an array with your start and end values. Any SVG attribut
 least some numeric values (such as `d`) can be animated:
 
 ```javascript
-var colors = ["#0bf", "#fc0"];
-var points = ["96 180 37 180 0 180 0 69 0 0 96 0 191 0 191 69 191 180 154 180",
-              "95 147 36 180 50 114 0 69 67 61 95 0 122 61 190 69 139 114 153 180"];
+var colors = ["#80f", "#fc0"];
+
+var points = [
+"M54,271 L0,271 L0,103 L0,0 L142,0 L285,0 L285,103 L285,271 L230,271 L142,271 Z",
+"M54,271 L71,172 L0,103 L98,89 L142,0 L186,89 L285,103 L213,172 L230,271 L142,224 Z"
+];
 
 animate({
-  el: "polygon",
-  easing: "easeOutCubic",
-  translateX: 200,
+  el: "path",
   fill: colors,
-  points: points
+  d: points
 });
 ```
 [View this example's result →](http://animateplus.com/demos/star/)
@@ -209,7 +210,7 @@ var div = document.querySelector("div");
 
 animate({
   el: div,
-  rotateZ: 180
+  rotate: 180
 });
 
 // Stop the rotation on click
