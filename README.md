@@ -221,6 +221,7 @@ div.addEventListener("click", function() {
 ## Quick examples
 
 * [Line-drawing animation screencast](https://cloudup.com/cNfHp2Pbeyk)
+* [Parallax icon](http://animateplus.com/demos/parallax/)
 * [SVG morphing button 1](http://animateplus.com/demos/search/)
 * [SVG morphing button 2](http://animateplus.com/demos/download-button/)
 * [250 SVG circles](http://animateplus.com/demos/particles/) (mouseover the elements)
