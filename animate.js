@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Library v1.3.1
+ * Animate Plus JavaScript Library v1.3.2
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -286,6 +286,27 @@ const animate = (() => {
     };
   })();
 
+  const addUnits = (() => {
+    const hasUnit = value => /\D$/.test(value);
+    const addUnit = curry((transformFunction, value) => {
+      if (hasUnit(value) || /scale/.test(transformFunction))
+        return value;
+      if (/rotate|skew/.test(transformFunction))
+        return `${value}deg`;
+      return `${value}px`;
+    });
+    const isValid = (params, transformFunctions) =>
+      transformFunctions.every(transform => params.get(transform).every(hasUnit));
+    return params => {
+      const transformFunctions = getCSSprops(params).filter(isTransformFunction);
+      if (isValid(params, transformFunctions)) return params;
+      const map = cloneMap(params);
+      transformFunctions.forEach(transform =>
+        map.set(transform, params.get(transform).map(addUnit(transform))));
+      return map;
+    };
+  })();
+
   const ensureRGB = (() => {
     const hasHex = curry((params, prop) => params.get(prop).some(isHex));
     const isValid = params => !getSVGprops(params).some(hasHex(params));
@@ -314,7 +335,13 @@ const animate = (() => {
     params.get("direction") == "reverse" ? reverseDirection(params) : params;
 
   const validateParams = compose(
-    toMap, fillBlankParams, buildMissingArrays, ensureRGB, setElements, setInitialDirection
+    toMap,
+    fillBlankParams,
+    buildMissingArrays,
+    addUnits,
+    ensureRGB,
+    setElements,
+    setInitialDirection
   );
 
 
@@ -336,7 +363,7 @@ const animate = (() => {
       map.set("from", from);
       map.set("to", to);
       map.set("isTransformFunction", isTransformFunction(prop));
-      map.set("isColor", map.get("isTransformFunction") ? false : isColor(params.get(prop)));
+      map.set("isColor", isColor(params.get(prop)));
       if (/\d$/.test(params.get("easing"))) {
         const [easing, frequency] = params.get("easing").split(" ");
         map.set("easing", easing);
@@ -383,6 +410,11 @@ const animate = (() => {
   supportedCSSprops.forEach(prop =>
     defaultCSSvalues.set(prop, contains(["opacity", "scale", "scaleX", "scaleY"], prop) ? 1 : 0));
 
+  const isTransformFunction = (() => {
+    const transformFunctions = supportedCSSprops.filter(prop => prop != "opacity");
+    return str => contains(transformFunctions, str);
+  })();
+
   const hardwareAccelerate = params => {
     const css = getCSSprops(params);
     if (!css.length) return;
@@ -395,32 +427,6 @@ const animate = (() => {
       el.style.willChange = value;
     });
   };
-
-
-  // transforms
-  // ===============================================================================================
-
-  const isTransformFunction = (() => {
-    const transformFunctions = supportedCSSprops.filter(prop => prop != "opacity");
-    return str => contains(transformFunctions, str);
-  })();
-
-  const combineTransformFunctions = (transformFunctions, values) =>
-    transformFunctions.reduce((a, b, i) => {
-      const transformFunction = `${b}(${addUnit(b, values[i])})`;
-      return a ? `${a} ${transformFunction}` : transformFunction;
-    }, null);
-
-  const addUnit = (() => {
-    const hasUnit = value => /\D$/.test(value);
-    return (transformFunction, value) => {
-      if (hasUnit(value) || /scale/.test(transformFunction))
-        return value;
-      if (/rotate|skew/.test(transformFunction))
-        return `${value}deg`;
-      return `${value}px`;
-    };
-  })();
 
 
   // value manipulation
@@ -465,13 +471,8 @@ const animate = (() => {
       let transforms;
       props.forEach((prop, i) => {
         if (prop.get("isTransformFunction")) {
-          if (!transforms) {
-            transforms = new Map();
-            transforms.set("functions", []);
-            transforms.set("values", []);
-          }
-          transforms.get("functions").push(prop.get("prop"));
-          transforms.get("values").push(progress[i]);
+          if (!transforms) transforms = [];
+          transforms.push(`${prop.get("prop")}(${progress[i]})`);
           return;
         }
         if (prop.get("prop") == "opacity") {
@@ -480,13 +481,10 @@ const animate = (() => {
         }
         el.setAttribute(prop.get("prop"), progress[i]);
       });
-      if (!transforms)
-        return;
+      if (!transforms) return;
       if (!transform)
         transform = "transform" in document.body.style ? "transform" : "-webkit-transform";
-      el.style[transform] = combineTransformFunctions(
-        transforms.get("functions"), transforms.get("values")
-      );
+      el.style[transform] = transforms.join(" ");
     });
   })();
 
