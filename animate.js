@@ -157,8 +157,6 @@ const animate = (() => {
 
   const first = arr => arr[0];
   const last = arr => first(arr.slice(-1));
-  const tail = arr => arr.slice(1);
-
   const flatten = arr => arr.reduce((a, b) => a.concat(b));
 
   const contains = (() =>
@@ -232,23 +230,13 @@ const animate = (() => {
   // dom
   // ===============================================================================================
 
-  const getElements = el => domArray(typeof el == "string" ? select(el) : el);
-
-  const select = selector => {
-    if (/^[\#.]?[\w-]+$/.test(selector)) {
-      if (first(selector) == ".")
-        return document.getElementsByClassName(tail(selector));
-      if (first(selector) == "#")
-        return document.getElementById(tail(selector));
-      return document.getElementsByTagName(selector);
-    }
-    return document.querySelectorAll(selector);
-  };
+  const getElements = el =>
+    domArray(typeof el == "string" ? document.querySelectorAll(el) : el);
 
   const domArray = obj => {
     if (Array.isArray(obj)) return obj;
     if (obj.nodeType) return [obj];
-    if (obj instanceof NodeList || obj instanceof HTMLCollection) return [...obj];
+    if (obj instanceof NodeList) return [...obj];
     return obj.get();
   };
 
