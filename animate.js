@@ -174,37 +174,16 @@ const animate = (() => {
   // map utils
   // ===============================================================================================
 
-  const getKeys = (() => {
-    if (Array.from)
-      return map => Array.from(map.keys());
-    return map => {
-      const keys = [];
-      map.forEach((value, key) => keys.push(key));
-      return keys;
-    };
-  })();
+  const getKeys = map => Array.from(map.keys());
 
   const toMap = (() => {
     const convert = obj => {
       const map = new Map();
-      Object.keys(obj).forEach(key => map.set(key, obj[key]));
+      const add = key => map.set(key, obj[key]);
+      Object.keys(obj).forEach(add);
       return map;
     };
     return obj => obj instanceof Map ? obj : convert(obj);
-  })();
-
-  const cloneMap = (() => {
-    try {
-      if (!new Map(new Map().set(null, null)).size) throw new Error();
-    }
-    catch (e) {
-      return map => {
-        const clone = new Map();
-        map.forEach((value, key) => clone.set(key, value));
-        return clone;
-      };
-    }
-    return map => new Map(map);
   })();
 
 
@@ -259,7 +238,7 @@ const animate = (() => {
     const required = getKeys(defaults).filter(key => defaults.get(key));
     const isFilled = params => required.every(param => params.has(param));
     const fill = params => {
-      const map = cloneMap(params);
+      const map = new Map(params);
       required.forEach(param => {
         if (!map.has(param)) map.set(param, defaults.get(param));
       });
@@ -274,7 +253,7 @@ const animate = (() => {
     const missingArrays = params => getCSSprops(params).filter(not(propIsArray(params)));
     return params => {
       if (isValid(params)) return params;
-      const map = cloneMap(params);
+      const map = new Map(params);
       missingArrays(map).forEach(key => map.set(key, [defaultCSSvalues.get(key), map.get(key)]));
       return map;
     };
@@ -294,7 +273,7 @@ const animate = (() => {
     return params => {
       const transformFunctions = getCSSprops(params).filter(isTransformFunction);
       if (isValid(params, transformFunctions)) return params;
-      const map = cloneMap(params);
+      const map = new Map(params);
       transformFunctions.forEach(transform =>
         map.set(transform, params.get(transform).map(addUnit(transform))));
       return map;
@@ -307,20 +286,17 @@ const animate = (() => {
     const needConvert = params => getSVGprops(params).filter(hasHex(params));
     return params => {
       if (isValid(params)) return params;
-      const map = cloneMap(params);
+      const map = new Map(params);
       needConvert(params).forEach(key => map.set(key, map.get(key).map(toRGB)));
       return map;
     };
   })();
 
-  const setElements = params => {
-    const map = cloneMap(params);
-    map.set("el", getElements(params.get("el")));
-    return map;
-  };
+  const setElements = params =>
+    new Map(params).set("el", getElements(params.get("el")));
 
   const reverseDirection = params => {
-    const map = cloneMap(params);
+    const map = new Map(params);
     getAnimatedProps(params).forEach(prop => map.set(prop, map.get(prop).slice().reverse()));
     return map;
   };
@@ -401,8 +377,11 @@ const animate = (() => {
   ];
 
   const defaultCSSvalues = new Map();
-  supportedCSSprops.forEach(prop =>
-    defaultCSSvalues.set(prop, contains(["opacity", "scale", "scaleX", "scaleY"], prop) ? 1 : 0));
+  {
+    const ones = ["opacity", "scale", "scaleX", "scaleY"];
+    const setValue = prop => defaultCSSvalues.set(prop, contains(ones, prop) ? 1 : 0);
+    supportedCSSprops.forEach(setValue);
+  }
 
   const isTransformFunction = (() => {
     const transformFunctions = supportedCSSprops.filter(prop => prop != "opacity");
@@ -459,28 +438,23 @@ const animate = (() => {
 
   const getFinalValues = curry((params, prop) => last(params.get(prop.get("prop"))));
 
-  const setProgress = (() => {
-    let transform;
-    return curry((props, progress, el) => {
-      let transforms;
-      props.forEach((prop, i) => {
-        if (prop.get("isTransformFunction")) {
-          if (!transforms) transforms = [];
-          transforms.push(`${prop.get("prop")}(${progress[i]})`);
-          return;
-        }
-        if (prop.get("prop") == "opacity") {
-          el.style.opacity = progress[i];
-          return;
-        }
-        el.setAttribute(prop.get("prop"), progress[i]);
-      });
-      if (!transforms) return;
-      if (!transform)
-        transform = "transform" in document.body.style ? "transform" : "-webkit-transform";
-      el.style[transform] = transforms.join(" ");
+  const setProgress = curry((props, progress, el) => {
+    let transforms;
+    props.forEach((prop, i) => {
+      if (prop.get("isTransformFunction")) {
+        if (!transforms) transforms = [];
+        transforms.push(`${prop.get("prop")}(${progress[i]})`);
+        return;
+      }
+      if (prop.get("prop") == "opacity") {
+        el.style.opacity = progress[i];
+        return;
+      }
+      el.setAttribute(prop.get("prop"), progress[i]);
     });
-  })();
+    if (!transforms) return;
+    el.style.transform = transforms.join(" ");
+  });
 
 
   // start / end
@@ -508,7 +482,7 @@ const animate = (() => {
       if (params.get("direction") == "alternate")
         return reverseDirection(params);
       if (params.get("direction") == "reverse") {
-        const map = cloneMap(params);
+        const map = new Map(params);
         map.delete("direction");
         return map;
       }
@@ -525,15 +499,13 @@ const animate = (() => {
     let count = 0;
     return elements => {
       const id = count++;
-      const map = cloneMap(animations);
-      map.set(id, elements);
-      animations = map;
+      animations = new Map(animations).set(id, elements);
       return id;
     };
   })();
 
   const untrack = id => {
-    const map = cloneMap(animations);
+    const map = new Map(animations);
     map.delete(id);
     animations = map;
   };
@@ -569,7 +541,7 @@ const animate = (() => {
 
   animate.stop = el => {
     const stopped = getElements(el);
-    const map = cloneMap(animations);
+    const map = new Map(animations);
     map.forEach((elements, id) => {
       const remaining = difference(elements, stopped);
       remaining.length ? map.set(id, remaining) : map.delete(id);
