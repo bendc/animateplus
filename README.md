@@ -19,7 +19,7 @@ Start animating things:
 animate({
   el: "div",
   translateX: 100,
-  opacity: .5,
+  opacity: 0,
   duration: 500
 });
 ```
@@ -45,13 +45,17 @@ animate(params);
 
 ### el
 
-The elements to animate. `el` can either take a:
+The elements to animate. `el` can take any of these types:
 
-* CSS selector: `"div"`
-* jQuery-like object: `$("div")`
-* DOM element: `document.querySelector("div")`
-* Array of DOM elements: `[document.querySelector("div")]`
-* NodeList or HTMLCollection: `document.getElementsByTagName("div")`
+| Type           | Example
+| -------------- | --------------------------------------------
+| CSS selector   | "div"
+| jQuery object  | $("div")
+| DOM element    | document.querySelector("div")
+| NodeList       | document.querySelectorAll("div")
+| HTMLCollection | document.getElementsByTagName("div")
+| Array          | [document.querySelector("div")]
+| Set            | new Set().add(document.querySelector("div"))
 
 ### duration
 

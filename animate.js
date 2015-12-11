@@ -1,5 +1,5 @@
 /*
- * Animate Plus JavaScript Library v1.3.2
+ * Animate Plus JavaScript Library v1.3.3
  * http://animateplus.com
  *
  * Copyright (c) 2015 Benjamin De Cock
@@ -233,12 +233,18 @@ const animate = (() => {
   const getElements = el =>
     domArray(typeof el == "string" ? document.querySelectorAll(el) : el);
 
-  const domArray = obj => {
-    if (Array.isArray(obj)) return obj;
-    if (obj.nodeType) return [obj];
-    if (obj instanceof NodeList) return [...obj];
-    return obj.get();
-  };
+  const domArray = (() => {
+    const collections = [NodeList, HTMLCollection, Set];
+    return obj => {
+      if (Array.isArray(obj))
+        return obj;
+      if (collections.some(collection => obj instanceof collection))
+        return Array.from(obj);
+      if (obj.nodeType)
+        return [obj];
+      return obj.get();
+    };
+  })();
 
 
   // params
