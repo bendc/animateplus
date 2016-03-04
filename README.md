@@ -48,14 +48,14 @@ animate(params);
 The elements to animate. `el` can take any of these types:
 
 | Type           | Example
-| -------------- | --------------------------------------------
-| CSS selector   | "div"
-| jQuery object  | $("div")
-| DOM element    | document.querySelector("div")
-| NodeList       | document.querySelectorAll("div")
-| HTMLCollection | document.getElementsByTagName("div")
-| Array          | [document.querySelector("div")]
-| Set            | new Set().add(document.querySelector("div"))
+| -------------- | ----------------------------------------------
+| CSS selector   | `"div"`
+| jQuery object  | `$("div")`
+| DOM element    | `document.querySelector("div")`
+| NodeList       | `document.querySelectorAll("div")`
+| HTMLCollection | `document.getElementsByTagName("div")`
+| Array          | `[document.querySelector("div")]`
+| Set            | `new Set().add(document.querySelector("div"))`
 
 ### duration
 
