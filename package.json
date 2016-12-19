@@ -12,7 +12,8 @@
     "animation",
     "css",
     "svg",
-    "javascript"
+    "javascript",
+    "ember-addon"
   ],
   "author": "Benjamin De Cock <ben@deaxon.com>",
   "license": "MIT",
@@ -20,5 +21,13 @@
     "url": "https://github.com/bendc/animateplus/issues"
   },
   "homepage": "https://github.com/bendc/animateplus",
-  "files": ["LICENSE.md", "animate.js", "animate.min.js"]
+  "files": ["LICENSE.md", "animate.js", "animate.min.js"],
+
+  "ember-addon": {
+    "main": "ember-addon/index.js"
+  },
+  "dependencies": {
+    "ember-cli-babel": "^5.1.5",
+    "broccoli-funnel": "^0.2.3"
+  }
 }
