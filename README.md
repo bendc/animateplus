@@ -1,7 +1,7 @@
 # Animate Plus
 
 Animate Plus is a CSS and SVG animation library for modern browsers. Animate Plus is performant and
-lightweight (2.8KB gzipped), making it particularly well-suited for mobile.
+lightweight (2.8 KB gzipped), making it particularly well-suited for mobile.
 
 * [Performance/stress test](http://animateplus.com/demos/bloom/): hold the mouse down and make DOM elements bloom!
 * [Real-world example](https://stripe.com/open-source): all the CSS and SVG animations on this page are made with Animate Plus.
