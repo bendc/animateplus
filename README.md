@@ -55,7 +55,6 @@ Determines the acceleration curve of your animation.
 | linear   | in-cubic       | out-cubic       | in-out-cubic
 |          | in-quartic     | out-quartic     | in-out-quartic
 |          | in-quintic     | out-quintic     | in-out-quintic
-|          | in-quintic     | out-quintic     | in-out-quintic
 |          | in-exponential | out-exponential | in-out-exponential
 |          | in-circular    | out-circular    | in-out-circular
 |          | in-elastic     | out-elastic     | in-out-elastic
