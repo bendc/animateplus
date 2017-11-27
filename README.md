@@ -1,232 +1,315 @@
 # Animate Plus
 
-Animate Plus is a CSS and SVG animation library for modern browsers. Animate Plus is performant and
-lightweight (2.8 KB gzipped), making it particularly well-suited for mobile.
+Animate Plus is a modern animation library focusing on performance and authoring flexibility. It
+aims to deliver a steady 60 FPS and weighs less than 2 KB (minified and gzipped), making it
+particularly well-suited for mobile.
 
-* [Performance/stress test](http://animateplus.com/demos/bloom/): hold the mouse down and make DOM elements bloom!
-* [Real-world example](https://stripe.com/open-source): all the CSS and SVG animations on this page are made with Animate Plus.
+## Getting started
 
-## Getting Started
+`npm install animateplus` or download `animateplus.js` and start animating things:
 
-`npm install animateplus` or download and insert `animate.min.js`:
+```javascript
+import animate from "/animateplus.js";
 
-```html
-<script src=animate.min.js></script>
+animate({
+  elements: "div",
+  duration: 2000,
+  delay: index => index * 100,
+  transform: ["scale(0)", "scale(1)"]
+})
+.then(options => animate({
+  ...options,
+  transform: ["translate(0%)", "translate(500%)"]
+}));
 ```
-Start animating things:
+
+[Preview this example →](http://animateplus.com/examples/getting-started/)
+
+## Options
+
+### elements
+
+| Default | Type
+| :---    | :---
+| `null`  | String \| Element \| NodeList \| Array
+
+Determines the DOM elements to animate. You can either pass it a CSS selector or DOM elements.
 
 ```javascript
 animate({
-  el: "div",
-  translateX: 100,
-  opacity: 0,
-  duration: 500
+  elements: document.body.children,
+  transform: ["rotate(0turn)", "rotate(1turn)"]
 });
 ```
-
-## API
-
-### Arguments
-
-`animate` accepts either an `Object` or a `Map` containing at least an element and a property to animate:
-
-```javascript
-animate({
-  el: "div",
-  opacity: 0
-});
-
-// Or:
-var params = new Map();
-params.set("el", "div");
-params.set("opacity", 0);
-animate(params);
-```
-
-### el
-
-The elements to animate. `el` can take any of these types:
-
-| Type           | Example
-| -------------- | ----------------------------------------------
-| CSS selector   | `"div"`
-| jQuery object  | `$("div")`
-| DOM element    | `document.querySelector("div")`
-| NodeList       | `document.querySelectorAll("div")`
-| HTMLCollection | `document.getElementsByTagName("div")`
-| Array          | `[document.querySelector("div")]`
-| Set            | `new Set().add(document.querySelector("div"))`
-
-### duration
-
-The duration of your animation in milliseconds. Default: `1000`.
-
-### delay
-
-The delay before your animation starts in milliseconds. Default: `0`.
 
 ### easing
 
-The easing type. Default: `easeOutElastic`. You can preview the possible values listed
-below with the [easing visualizer tool](http://animateplus.com/easing-visualizer/).
+| Default       | Type
+| :---          | :---
+| `out-elastic` | String
 
-| linear | ease in       | ease out       | ease in out
-| ------ | ------------- | -------------- | ----------------
-| linear | easeInQuad    | easeOutQuad    | easeInOutQuad
-|        | easeInCubic   | easeOutCubic   | easeInOutCubic
-|        | easeInQuart   | easeOutQuart   | easeInOutQuart
-|        | easeInQuint   | easeOutQuint   | easeInOutQuint
-|        | easeInSine    | easeOutSine    | easeInOutSine
-|        | easeInExpo    | easeOutExpo    | easeInOutExpo
-|        | easeInCirc    | easeOutCirc    | easeInOutCirc
-|        | easeInElastic | easeOutElastic | easeInOutElastic
-|        | easeInBack    | easeOutBack    | easeInOutBack
-|        |               | easeOutBounce  |
+Determines the acceleration curve of your animation.
 
-The frequency of elastic curves can be configured by passing a number between 0 and 1000 (default: `500`).
+| constant | accelerate     | decelerate      | accelerate-decelerate
+| :---     | :---           | :---            | :---
+| linear   | in-cubic       | out-cubic       | in-out-cubic
+|          | in-quartic     | out-quartic     | in-out-quartic
+|          | in-quintic     | out-quintic     | in-out-quintic
+|          | in-quintic     | out-quintic     | in-out-quintic
+|          | in-exponential | out-exponential | in-out-exponential
+|          | in-circular    | out-circular    | in-out-circular
+|          | in-elastic     | out-elastic     | in-out-elastic
+
+The amplitude and period of elastic easings can be configured by providing space-separated values.
+Amplitude defaults to `1`, period to `0.4`.
 
 ```javascript
+// Increase elasticity
 animate({
-  el: "div",
-  translateY: "200%",
-  easing: "easeOutElastic 700"
+  elements: "span",
+  easing: "out-elastic 1.4 0.2",
+  transform: ["translate(0px)", "translate(500px)"]
+});
+```
+
+### duration
+
+| Default | Type
+| :---    | :---
+| `1000`  | Number \| Function
+
+Determines the duration of your animation in milliseconds. By passing it a callback, you can define
+a different duration for each element. The callback takes the index of each element as its argument
+and returns a number.
+
+```javascript
+// First element fades out in 1s, second element in 2s, etc.
+animate({
+  elements: "span",
+  easing: "linear",
+  duration: index => (index + 1) * 1000,
+  opacity: [1, 0]
+});
+```
+
+### delay
+
+| Default | Type
+| :---    | :---
+| `0`     | Number \| Function
+
+Determines the delay of your animation in milliseconds. By passing it a callback, you can define
+a different delay for each element. The callback takes the index of each element as its argument
+and returns a number.
+
+```javascript
+// First element fades out after 1s, second element after 2s, etc.
+animate({
+  elements: "span",
+  easing: "linear",
+  delay: index => (index + 1) * 1000,
+  opacity: [1, 0]
 });
 ```
 
 ### loop
 
-Boolean. Specifies if your animation should run indefinitely. Default: `false`.
+| Default | Type
+| :---    | :---
+| `false` | Boolean
+
+Determines if the animation should repeat.
 
 ### direction
 
-The direction of your animation. Default: `normal`. Possible values:
+| Default  | Type
+| :---     | :---
+| `normal` | String
 
-* normal
-* reverse
-* alternate (only applies if your animation loops)
+Determines the direction of the animation. `reverse` runs the animation backwards, `alternate`
+switches direction after each iteration if the animation loops.
 
-### begin
+### speed
 
-A function to trigger before your animation starts. An array of the elements selected with the `el` parameter is passed as the callback's first argument.
+| Default | Type
+| :---    | :---
+| `1`     | Number
 
-```html
-<!doctype html>
-<title>Example</title>
+Determines the animation playback rate. Useful in the authoring process to speed up some parts of a
+long sequence (value above 1) or slow down a specific animation to observe it (value below 1).
 
-<style>
-  div {
-    display: none;
-    width: 100px;
-    height: 100px;
-    background: black;
-   }
-</style>
+### optimize
 
-<div></div>
-<div></div>
+| Default | Type
+| :---    | :---
+| `false` | Boolean
 
-<script src=animate.min.js></script>
-<script>
-  animate({
-    el: "div",
-    scaleX: 2,
-    begin: show
+Forces hardware acceleration during an animation if set to `true`. Unless you experience performance
+issues, it's recommended to leave it off as hardware acceleration comes with potentially harmful
+side-effects.
+
+### change
+
+| Default | Type
+| :---    | :---
+| `null`  | Function
+
+Defines a callback invoked on every frame of the animation. The callback takes as its argument the
+animation progress (between 0 and 1) and can be used on its own without being tied to `elements`.
+
+```javascript
+// Linearly outputs the percentage increase during 5s
+animate({
+  duration: 5000,
+  easing: "linear",
+  change: progress =>
+    document.body.textContent = `${Math.round(progress * 100)}%`
+});
+```
+
+## Animations
+
+Animate Plus lets you animate HTML and SVG elements with any property that takes numeric values,
+including hexadecimal colors.
+
+```javascript
+// Animate the radius and fill color of an SVG circle
+animate({
+  elements: "circle",
+  r: [0, 50],
+  fill: ["#80f", "#fc0"]
+});
+```
+
+Each property you animate needs an array defining the start and end values. For convenience, you can
+omit everything but the numbers in the end values.
+
+```javascript
+// Same as ["translate(0px)", "translate(100px)"]
+animate({
+  elements: "span",
+  transform: ["translate(0px)", 100]
+});
+```
+
+These arrays can optionally be returned by a callback that takes the index of each element, just
+like with [duration](#duration) and [delay](#delay-1).
+
+```javascript
+// First element translates by 100px, second element by 200px, etc.
+animate({
+  elements: "span",
+  transform: index => ["translate(0px)", (index + 1) * 100]
+});
+```
+
+## Promise
+
+`animate()` returns a promise which resolves once the animation finishes. The promise resolves to
+the object initially passed to `animate()`, making animation chaining straightforward and
+convenient. The [Getting started](#getting-started) section gives you a basic promise example.
+
+Since Animate Plus relies on native promises, you can benefit from all the usual features promises
+provide, such as `Promise.all`, `Promise.race`, and especially `async/await` which makes animation
+timelines easy to set up.
+
+```javascript
+const play = async () => {
+  const options = await animate({
+    elements: "span",
+    duration: 3000,
+    transform: ["translateY(-100vh)", 0]
   });
 
-  function show(elements) {
-    elements.forEach(function(el) { el.style.display = "block"; });
-  }
-</script>
+  await animate({
+    ...options,
+    transform: ["rotate(0turn)", 1]
+  });
+
+  await animate({
+    ...options,
+    duration: 800,
+    easing: "in-quintic",
+    transform: ["scale(1)", 0]
+  });
+};
+
+play();
 ```
 
-### complete
+[Preview this example →](http://animateplus.com/examples/timeline/)
 
-Same as `begin`, but triggers the callback at the end of the animation instead.
+## Additional functions
 
-## CSS animations
+### stop
 
-Supported properties:
-
-* translateX - translateY - translateZ
-* scale - scaleX - scaleY - scaleZ
-* rotate - rotateX - rotateY - rotateZ
-* skewX - skewY
-* opacity
-* perspective
-
-Animations start from default CSS values and end to the values you specify:
+Stops the animations on the [elements](#elements) passed as the argument.
 
 ```javascript
+import {stop} from "/animateplus.js";
+
 animate({
-  el: "div",
-  opacity: 0,    // fades out from 1 to 0
-  translateX: 20 // slides to the right by 20px
+  elements: "span",
+  easing: "linear",
+  duration: index => 8000 + index * 200,
+  loop: true,
+  transform: ["rotate(0deg)", 360]
 });
+
+document.addEventListener("click", ({target}) => stop(target));
 ```
-Alternatively, you can specify custom start values by passing an array:
+
+[Preview this example →](http://animateplus.com/examples/stop/)
+
+### delay
+
+Sets a timer in milliseconds. It differentiates from `setTimeout()` by returning a promise and being
+more accurate, consistent and battery-friendly. The [delay](#delay-1) option relies internally on
+this method.
 
 ```javascript
-animate({
-  el: "div",
-  opacity: [0, 1],    // fades in from 0 to 1
-  translateX: [20, 0] // slides to the left from 20px to 0
-});
+import {delay} from "/animateplus.js";
+
+delay(500).then(time => console.log(`${time}ms elapsed`));
 ```
 
-`animate` automatically adds units if they're missing (`deg` for `rotate`, `px` for `translate` and `perspective`) but you can specify them if needed:
+## Browser support
 
-```javascript
-animate({
-  el: "div",
-  translateX: "100%"
-});
-```
+Animate Plus is provided as a native ES2015 module, which means you may need to transpile it
+depending on your browser support policy. The library works as is using `<script type=module>` in
+the following browsers:
 
-## SVG animations
+* Chrome 61
+* Safari 11.1
+* Firefox 57 with `dom.moduleScripts.enabled`
 
-SVG animations require an array with your start and end values. Any SVG attribute containing at
-least some numeric values can be animated:
+## Best practices
 
-```javascript
-var colors = ["#80f", "#fc0"];
+Animations play a major role in the design of good user interfaces. They help connecting actions to
+consequences, make the flow of interactions manifest, and greatly improve the polish and perception
+of a product. However, animations can be damaging and detrimental to the user experience if they get
+in the way. Here are a few best practices to keep your animations effective and enjoyable:
 
-var points = [
-  "M54,271 L0,271 L0,103 L0,0 L142,0 L285,0 L285,103 L285,271 L230,271 L142,271 Z",
-  "M54,271 L71,172 L0,103 L98,89 L142,0 L186,89 L285,103 L213,172 L230,271 L142,224 Z"
-];
+* **Speed**: Keep your animations fast. A quick animation makes a software feel more productive and
+  responsive. The optimal duration depends on the effect and animation curve, but in most cases you
+should likely stay under 500 milliseconds.
+* **Easing**: The animation curve contributes greatly to a well-crafted animation. The ease-out
+  options are usually a safe bet as animations kick off promptly, making them react to user
+interactions instantaneously.
+* **Performance**: Having no animation is better than animations that stutter. When animating HTML
+  elements, aim for using exclusively `transform` and `opacity` as these are the only properties
+browsers can animate cheaply.
+* **Restraint**: Tone down your animations and respect user preferences. Animations can rapidly feel
+  overwhelming and cause motion sickness, so it's important to keep them subtle and to attenuate
+them even more for users who need reduced motion, for example by using `matchMedia("(prefers-reduced-motion)")` in JavaScript.
 
-animate({
-  el: "path",
-  fill: colors,
-  d: points
-});
-```
-[View this example's result →](http://animateplus.com/demos/star/)
+## Examples
 
-## Stopping animations
-
-`animate.stop(el)` stops all animations running on `el` (which can be any of [these values](#el)).
-
-```javascript
-var div = document.querySelector("div");
-
-animate({
-  el: div,
-  rotate: 180
-});
-
-// Stop the rotation on click
-div.addEventListener("click", function() {
-  animate.stop(div);
-});
-```
-
-## Quick examples
-
-* [Line-drawing animation screencast](https://cloudup.com/cNfHp2Pbeyk)
-* [Parallax icon](http://animateplus.com/demos/parallax/)
-* [SVG morphing button 1](http://animateplus.com/demos/search/)
-* [SVG morphing button 2](http://animateplus.com/demos/download-button/)
-* [250 SVG circles](http://animateplus.com/demos/particles/) (mouseover the elements)
-* [Bouncing circle of DOM elements](http://animateplus.com/demos/circle/) (mouseover the elements)
-* [Bendy paths](http://animateplus.com/demos/bendy-path/) based on the `<use>` SVG element.
+* [Stress test](http://animateplus.com/examples/stress-test/): 500 elements animated concurrently.
+* [Morphing](http://animateplus.com/examples/clip-path/): CSS polygon morphing using `clip-path`.
+* [Motion path](http://animateplus.com/examples/motion-path/): Animation along a custom path.
+* [Line drawing](http://animateplus.com/examples/line-drawing/): SVG line drawing animation.
+* [Elasticity](http://animateplus.com/examples/elasticity/): SVG circles following your clicks.
+* [Anchors](http://animateplus.com/examples/anchor-scroll/): Anchor scrolling animation using `change()`.
+* [Progress](http://animateplus.com/examples/progress/): Animation progress using `change()`.
+* [Text](http://animateplus.com/examples/text/): Text splitting animation.
