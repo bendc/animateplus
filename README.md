@@ -1,6 +1,6 @@
 # Animate Plus
 
-Animate Plus is a modern animation library focusing on performance and authoring flexibility. It
+Animate Plus is a JavaScript animation library focusing on performance and authoring flexibility. It
 aims to deliver a steady 60 FPS and weighs less than 2 KB (minified and gzipped), making it
 particularly well-suited for mobile.
 
@@ -193,7 +193,7 @@ animate({
 ```
 
 These arrays can optionally be returned by a callback that takes the index of each element, just
-like with [duration](#duration) and [delay](#delay-1).
+like with [duration](#duration) and [delay](#delay).
 
 ```javascript
 // First element translates by 100px, second element by 200px, etc.
@@ -264,7 +264,7 @@ document.addEventListener("click", ({target}) => stop(target));
 ### delay
 
 Sets a timer in milliseconds. It differentiates from `setTimeout()` by returning a promise and being
-more accurate, consistent and battery-friendly. The [delay](#delay-1) option relies internally on
+more accurate, consistent and battery-friendly. The [delay](#delay) option relies internally on
 this method.
 
 ```javascript
