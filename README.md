@@ -305,8 +305,8 @@ them even more for users who need reduced motion, for example by using `matchMed
 ## Examples
 
 * [Stress test](http://animateplus.com/examples/stress-test/): 500 elements animated concurrently.
-* [Morphing](http://animateplus.com/examples/clip-path/): CSS polygon morphing using `clip-path`.
-* [Motion path](http://animateplus.com/examples/motion-path/): Animation along a custom path.
+* [Morphing](http://animateplus.com/examples/clip-path/): CSS polygon morphing using `clip-path` (doesn't work in Safari).
+* [Motion path](http://animateplus.com/examples/motion-path/): Animation along a custom path (doesn't work in Safari).
 * [Line drawing](http://animateplus.com/examples/line-drawing/): SVG line drawing animation.
 * [Elasticity](http://animateplus.com/examples/elasticity/): SVG circles following your clicks.
 * [Anchors](http://animateplus.com/examples/anchor-scroll/): Anchor scrolling animation using `change()`.
