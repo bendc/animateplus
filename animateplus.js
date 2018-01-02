@@ -1,6 +1,6 @@
 /*
- * Animate Plus v2.0.0
- * Copyright (c) 2017 Benjamin De Cock
+ * Animate Plus v2.0.1
+ * Copyright (c) 2017-2018 Benjamin De Cock
  * http://animateplus.com/license
  */
 
@@ -311,6 +311,7 @@ document.addEventListener("visibilitychange", () => {
   }
 
   const {all, time} = paused;
+  if (!all) return;
   const elapsed = now - time;
   requestAnimationFrame(() =>
     all.forEach(object => {
