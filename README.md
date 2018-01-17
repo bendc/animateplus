@@ -6,7 +6,7 @@ particularly well-suited for mobile.
 
 ## Getting started
 
-`npm install animateplus` or download `animateplus.js` and start animating things:
+`npm install animateplus`, includde via [CDN](https://www.jsdelivr.com/package/npm/animateplus) or download `animateplus.js` and start animating things:
 
 ```javascript
 import animate from "/animateplus.js";
