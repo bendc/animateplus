@@ -309,6 +309,8 @@ them even more for users who need reduced motion, for example by using `matchMed
 * [Motion path](http://animateplus.com/examples/motion-path/): Animation along a custom path.
 * [Line drawing](http://animateplus.com/examples/line-drawing/): SVG line drawing animation.
 * [Elasticity](http://animateplus.com/examples/elasticity/): SVG circles following your clicks.
+* [External SVG](http://animateplus.com/examples/external-svg/): Animating paths from an external
+  SVG file.
 * [Anchors](http://animateplus.com/examples/anchor-scroll/): Anchor scrolling animation using `change()`.
 * [Progress](http://animateplus.com/examples/progress/): Animation progress using `change()`.
 * [Text](http://animateplus.com/examples/text/): Text splitting animation.
