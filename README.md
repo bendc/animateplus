@@ -280,7 +280,7 @@ the following browsers:
 
 * Chrome 61
 * Safari 11.1
-* Firefox 57 with `dom.moduleScripts.enabled`
+* Firefox 60
 
 ## Best practices
 
