@@ -305,6 +305,7 @@ them even more for users who need reduced motion, for example by using `matchMed
 ## Examples
 
 * [Stress test](http://animateplus.com/examples/stress-test/): 500 elements animated concurrently.
+* [Accordion](http://animateplus.com/examples/accordion/): Animated accordion.
 * [Morphing](http://animateplus.com/examples/clip-path/): CSS polygon morphing using `clip-path`.
 * [Motion path](http://animateplus.com/examples/motion-path/): Animation along a custom path.
 * [Line drawing](http://animateplus.com/examples/line-drawing/): SVG line drawing animation.
