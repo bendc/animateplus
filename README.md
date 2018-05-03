@@ -1,8 +1,7 @@
 # Animate Plus
 
 Animate Plus is a JavaScript animation library focusing on performance and authoring flexibility. It
-aims to deliver a steady 60 FPS and weighs less than 2 KB (minified and gzipped), making it
-particularly well-suited for mobile.
+aims to deliver a steady 60 FPS and weighs 2 KB compressed, making it particularly well-suited for mobile.
 
 ## Getting started
 
@@ -147,6 +146,30 @@ Forces hardware acceleration during an animation if set to `true`. Unless you ex
 issues, it's recommended to leave it off as hardware acceleration comes with potentially harmful
 side-effects.
 
+### blur
+
+| Default | Type
+| :---    | :---
+| `null`  | Object \| Function
+
+Simulates a motion blur effect. Takes an object or a function returning an object that specifies the
+strength of the directional blur on the `x` and `y` axes. A missing axis defaults to `0`, which
+disables the blur on that axis.
+
+```javascript
+animate({
+  elements: "circle",
+  easing: "out-exponential",
+  duration: 2500,
+  loop: true,
+  direction: "alternate",
+  blur: {x: 20, y: 2},
+  transform: ["translate(0%)", "translate(80%)"]
+});
+```
+
+[Preview this example →](http://animateplus.com/examples/motion-blur/)
+
 ### change
 
 | Default | Type
@@ -281,6 +304,19 @@ the following browsers:
 * Chrome 61
 * Safari 11.1
 * Firefox 60
+
+## Content delivery networks
+
+Animate Plus is available on [CDNJS](https://cdnjs.com/libraries/animateplus) and [jsDelivr](https://www.jsdelivr.com/package/npm/animateplus).
+
+```javascript
+import animate from "https://cdnjs.cloudflare.com/ajax/libs/animateplus/2.1.0/animateplus.min.js";
+
+animate({
+  elements: "div",
+  transform: ["translate(0%)", 100]
+});
+```
 
 ## Best practices
 
