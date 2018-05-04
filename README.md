@@ -1,7 +1,7 @@
 # Animate Plus
 
 Animate Plus is a JavaScript animation library focusing on performance and authoring flexibility. It
-aims to deliver a steady 60 FPS and weighs 2 KB compressed, making it particularly well-suited for mobile.
+aims to deliver a steady 60 FPS and weighs less than 3 KB (minified and compressed), making it particularly well-suited for mobile.
 
 ## Getting started
 
@@ -22,7 +22,7 @@ animate({
 }));
 ```
 
-[Preview this example →](http://animateplus.com/examples/getting-started/)
+[Preview this example &#8594;](http://animateplus.com/examples/getting-started/)
 
 ## Options
 
@@ -168,7 +168,7 @@ animate({
 });
 ```
 
-[Preview this example →](http://animateplus.com/examples/motion-blur/)
+[Preview this example &#8594;](http://animateplus.com/examples/motion-blur/)
 
 ### change
 
@@ -259,7 +259,7 @@ const play = async () => {
 play();
 ```
 
-[Preview this example →](http://animateplus.com/examples/timeline/)
+[Preview this example &#8594;](http://animateplus.com/examples/timeline/)
 
 ## Additional functions
 
@@ -281,7 +281,7 @@ animate({
 document.addEventListener("click", ({target}) => stop(target));
 ```
 
-[Preview this example →](http://animateplus.com/examples/stop/)
+[Preview this example &#8594;](http://animateplus.com/examples/stop/)
 
 ### delay
 
@@ -310,7 +310,7 @@ the following browsers:
 Animate Plus is available on [CDNJS](https://cdnjs.com/libraries/animateplus) and [jsDelivr](https://www.jsdelivr.com/package/npm/animateplus).
 
 ```javascript
-import animate from "https://cdnjs.cloudflare.com/ajax/libs/animateplus/2.1.0/animateplus.min.js";
+import animate from "https://cdn.jsdelivr.net/npm/animateplus@2/animateplus.js";
 
 animate({
   elements: "div",
