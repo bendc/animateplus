@@ -1,5 +1,5 @@
 /*
- * Animate Plus v2.1.0
+ * Animate Plus v2.1.1
  * Copyright (c) 2017-2018 Benjamin De Cock
  * http://animateplus.com/license
  */
@@ -49,8 +49,9 @@ const blurs = {
       style: "position: absolute; width: 0; height: 0"
     });
     const filter = createSVG("filter", this.axes.reduce((attributes, axis) => {
-      attributes[axis] = `-${blur[axis]}%`;
-      attributes[axis == "x" ? "width" : "height"] = `${100 + blur[axis] * 2}%`;
+      const offset = blur[axis] * 2;
+      attributes[axis] = `-${offset}%`;
+      attributes[axis == "x" ? "width" : "height"] = `${100 + offset * 2}%`;
       return attributes;
     },{
       id,
